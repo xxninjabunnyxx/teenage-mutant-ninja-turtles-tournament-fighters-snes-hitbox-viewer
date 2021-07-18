@@ -243,33 +243,6 @@ end
 --    end
 --end
 
---local function draw_vulcan_hitboxes(table)
---    for key, value in ipairs(table.player.vulcan_hitbox) do
---
---        local player_facing = facing({player = table.player})
---        local player_vulcan_state = memory.read_u8(
---                                        table.player.vulcan_hitbox[key]
---                                            .state_address)
---
---        local border = color.invisible.border
---        local fill = color.invisible.fill
---
---        if player_vulcan_state > 0 then
---            border = color.active_hitbox.border
---            fill = color.active_hitbox.fill
---        end
---
---        draw_moving_box({
---            player = table.player,
---            player_facing = player_facing,
---            boxtype = 'vulcan_hitbox',
---            key = key,
---            border = border,
---            fill = fill
---        })
---    end
---end
---
 --local function draw_boxes()
 --    draw_hitboxes({player = player_1})
 --    draw_hitboxes({player = player_2})
@@ -277,8 +250,6 @@ end
 --    draw_active_hitboxes({player = player_2})
 --    draw_projectile_hitboxes({player = player_1})
 --    draw_projectile_hitboxes({player = player_2})
---    draw_vulcan_hitboxes({player = player_1})
---    draw_vulcan_hitboxes({player = player_2})
 --end
 
 local menu = {
