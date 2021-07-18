@@ -1,0 +1,16 @@
+name: Post a Tweet
+on:
+  push:
+    branches:
+      - main
+jobs:
+  tweet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ethomson/send-tweet-action@v1
+        with:
+          status: "Updated Teenage Mutant Ninja Turtles: Tournament Fighters hitbox viewer Lua script #fgc #snes #gundam #lua https://github.com/xxninjabunnyxx/gundam-wing-endless-dual-snes-hitbox-viewer"
+          consumer-key: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
+          consumer-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
+          access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
