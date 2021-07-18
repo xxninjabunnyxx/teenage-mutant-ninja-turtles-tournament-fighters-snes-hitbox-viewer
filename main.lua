@@ -17,7 +17,7 @@ local time = {address = 0x00008E, max = 96}
 local player_1 = {
     health = {address = 0x000EE4, max = 96},
 
-    meter = {address = 0x001B14, max = 80},
+    meter = {address = 0x001AC4, max = 80},
 
     position = {x = '', y = ''},
 
@@ -50,7 +50,7 @@ local player_1 = {
 local player_2 = {
     health = {address = 0x000FC4, max = 96},
 
-    meter = {address = '', max = 80},
+    meter = {address = 0x001B14, max = 80},
 
     position = {x = '', y = ''},
 
@@ -336,20 +336,20 @@ local menu = {
             }
         }
     },
-    --[7] = {text = "Extras", skip = true},
-    --[8] = {
-    --    text = "Time",
-    --    skip = false,
-    --    state = 1,
-    --    max_state = 2,
-    --    options = {
-    --        [1] = {text = " Normal >", callback = noop},
-    --        [2] = {
-    --            text = "< Infinate",
-    --            callback = noop
-    --        }
-    --    }
-    --},
+    [7] = {text = "Extras", skip = true},
+    [8] = {
+        text = "Time",
+        skip = false,
+        state = 1,
+        max_state = 2,
+        options = {
+            [1] = {text = " Normal >", callback = noop},
+            [2] = {
+                text = "< Infinate",
+                callback = one_byte_set_to_max({address = time.address, max = time.max})
+            }
+        }
+    },
     --[9] = {
     --    text = "Hitboxes",
     --    skip = false,
