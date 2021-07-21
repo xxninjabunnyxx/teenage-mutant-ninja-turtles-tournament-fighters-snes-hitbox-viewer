@@ -19,10 +19,8 @@ local player_1 = {
 
     meter = {address = 0x001AC4, max = 80},
 
-    position = {x = '', y = ''},
-
     hitbox = {
-        [1] = {x_1 = '', x_2 = '', y_1 = '', y_2 = ''},
+        [1] = {x_1 = 0x0014C8, x_2 = 0x001508, y_1 = 0x001516, y_2 = ''},
     },
 
     active_hitbox = {
@@ -32,8 +30,8 @@ local player_1 = {
     projectile_hitbox = {
         [1] = {
             box = {
-                x_1 = '',
-                x_2 = '',
+                x_1 = 0x0009C8,
+                x_2 = 0x0009C1,
                 y_1 = '',
                 y_2 = ''
             },
@@ -41,10 +39,6 @@ local player_1 = {
             state_address = ''
         },
     },
-
-    facing = {address = '', bitwise_and = ''},
-
-    address = {attack = ''},
 }
 
 local player_2 = {
@@ -52,8 +46,6 @@ local player_2 = {
 
     meter = {address = 0x001B14, max = 80},
 
-    position = {x = '', y = ''},
-
     hitbox = {
         [1] = {x_1 = '', x_2 = '', y_1 = '', y_2 = ''},
     },
@@ -79,8 +71,6 @@ local player_2 = {
 
     address = {attack = ''},
 }
-
-local camera = {x = '', y = ''}
 
 local color = {
     hitbox = {border = 0xFF0000FF, fill = 0x400000FF},
@@ -90,167 +80,18 @@ local color = {
 
 local function noop() return 0 end
 
---local function facing(table)
---    if bit.band(memory.read_u8(table.player.facing.address),
---                table.player.facing.bitwise_and) ==
---        table.player.facing.bitwise_and then
---        return 1
---    else
---        return -1
---    end
---end
---
+local function facing(table)
+    if  memory.read_u8(table.player.facing.address) == table.player.facing.right then
+        return 1
+    else
+        return -1
+    end
+end
+
 local function one_byte_set_to_max(table)
     local function f() memory.writebyte(table.address, table.max) end
     return f
 end
---
---local function two_byte_set_to_max(table)
---    local function f() memory.write_u16_le(table.address, table.max) end
---    return f
---end
---
---local function draw_box(table)
---    gui.drawBox((memory.read_s16_le(table.player.position.x) -
---                    memory.read_s16_le(camera.x)) +
---                    (memory.read_s16_le(
---                        table.player[table.boxtype][table.key].x_1) *
---                        table.player_facing),
---                (memory.read_s16_le(table.player.position.y) -
---                    memory.read_s16_le(camera.y)) +
---                    memory.read_s16_le(
---                        table.player[table.boxtype][table.key].y_1),
---                (memory.read_s16_le(table.player.position.x) -
---                    memory.read_s16_le(camera.x)) +
---                    ((memory.read_s16_le(
---                        table.player[table.boxtype][table.key].x_1) +
---                        memory.read_s16_le(
---                            table.player[table.boxtype][table.key].x_2)) *
---                        table.player_facing),
---                (memory.read_s16_le(table.player.position.y) -
---                    memory.read_s16_le(camera.y)) +
---                    (memory.read_s16_le(
---                        table.player[table.boxtype][table.key].y_1) +
---                        memory.read_s16_le(
---                            table.player[table.boxtype][table.key].y_2)),
---                table.border, table.fill)
---end
---
---local function draw_moving_box(table)
---    gui.drawBox((memory.read_s16_le(table.player[table.boxtype][table.key]
---                                        .position.x) -
---                    memory.read_s16_le(camera.x)) +
---                    (memory.read_s16_le(
---                        table.player[table.boxtype][table.key].box.x_1) *
---                        table.player_facing),
---                (memory.read_s16_le(
---                    table.player[table.boxtype][table.key].position.y) -
---                    memory.read_s16_le(camera.y)) +
---                    memory.read_s16_le(
---                        table.player[table.boxtype][table.key].box.y_1),
---                (memory.read_s16_le(
---                    table.player[table.boxtype][table.key].position.x) -
---                    memory.read_s16_le(camera.x)) +
---                    ((memory.read_s16_le(
---                        table.player[table.boxtype][table.key].box.x_1) +
---                        memory.read_s16_le(
---                            table.player[table.boxtype][table.key].box.x_2)) *
---                        table.player_facing),
---                (memory.read_s16_le(
---                    table.player[table.boxtype][table.key].position.y) -
---                    memory.read_s16_le(camera.y)) +
---                    (memory.read_s16_le(
---                        table.player[table.boxtype][table.key].box.y_1) +
---                        memory.read_s16_le(
---                            table.player[table.boxtype][table.key].box.y_2)),
---                table.border, table.fill)
---end
---
---local function draw_hitboxes(table)
---    for key, value in ipairs(table.player.hitbox) do
---        local player_facing = facing({player = table.player})
---
---        local border = color.hitbox.border
---        local fill = color.hitbox.fill
---
---        if memory.read_s16_le(table.player.hitbox[key].x_2) == -1 then
---            border = color.invisible.border
---            fill = color.invisible.fill
---        end
---
---        draw_box({
---            player = table.player,
---            player_facing = player_facing,
---            boxtype = 'hitbox',
---            key = key,
---            border = border,
---            fill = fill
---        })
---    end
---end
-
---local function draw_active_hitboxes(table)
---    for key, value in ipairs(table.player.active_hitbox) do
---
---        local player_facing = facing({player = table.player})
---
---        local player_attack_state = memory.read_u8(table.player.address.attack)
---
---        local border = color.invisible.border
---        local fill = color.invisible.fill
---
---        if player_attack_state > 0 then
---            border = color.active_hitbox.border
---            fill = color.active_hitbox.fill
---        end
---
---        draw_box({
---            player = table.player,
---            player_facing = player_facing,
---            boxtype = 'active_hitbox',
---            key = key,
---            border = border,
---            fill = fill
---        })
---    end
---end
-
---local function draw_projectile_hitboxes(table)
---    for key, value in ipairs(table.player.projectile_hitbox) do
---
---        local player_facing = facing({player = table.player})
---
---        local player_projectile_state = memory.read_u8(table.player
---                                                           .projectile_hitbox[key]
---                                                           .state_address)
---
---        local border = color.invisible.border
---        local fill = color.invisible.fill
---
---        if player_projectile_state > 0 then
---            border = color.active_hitbox.border
---            fill = color.active_hitbox.fill
---        end
---
---        draw_moving_box({
---            player = table.player,
---            player_facing = player_facing,
---            boxtype = 'projectile_hitbox',
---            key = key,
---            border = border,
---            fill = fill
---        })
---    end
---end
-
---local function draw_boxes()
---    draw_hitboxes({player = player_1})
---    draw_hitboxes({player = player_2})
---    draw_active_hitboxes({player = player_1})
---    draw_active_hitboxes({player = player_2})
---    draw_projectile_hitboxes({player = player_1})
---    draw_projectile_hitboxes({player = player_2})
---end
 
 local menu = {
     [1] = {text = "Player 1", skip = true},
@@ -332,6 +173,10 @@ local menu = {
     --    }
     --}
 }
+
+local function test_box()
+    gui.drawBox(memory.read_u8(player_1.projectile_hitbox[1].box.x_1), 1, memory.read_u8(player_1.projectile_hitbox[1].box.x_1) + 3, 300)
+end
 
 local function run_menu_callbacks()
     for key, value in ipairs(menu) do
@@ -435,7 +280,7 @@ while true do
     end
 
     check_timers()
-
+test_box()
     if state.flags.overlay == true then overlay() end
 
     run_menu_callbacks()
